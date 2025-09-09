@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MiTecho - Cooperativa de Viviendas</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <header>Cooperativa de Viviendas "MiTecho"</header>
+
+  <nav>
+    <button onclick="mostrar('inicio')">Inicio</button>
+    <button onclick="mostrar('nosotros')">Nosotros</button>
+    <button onclick="mostrar('proyectos')">Proyectos</button>
+    <button onclick="mostrar('contacto')">Contacto</button>
+  </nav>
+
+  <main>
+    <div id="inicio" class="content active">
+      <h1>Bienvenido a MiTecho</h1>
+      <p>Construimos sueños juntos. Descubrí cómo acceder a tu vivienda cooperativa.</p>
+      <div class="cta-box">
+        <h2>¿Querés formar parte?</h2>
+        <button class="btn acceder-btn" onclick="mostrar('login')">Acceder</button>
+      </div>
+    </div>
+
+    <div id="nosotros" class="content">
+      <h1>Sobre Nosotros</h1>
+      <p>Somos una cooperativa fundada en 2010, comprometida con el acceso justo a la vivienda.</p>
+    </div>
+
+    <div id="proyectos" class="content">
+      <h1>Nuestros Proyectos</h1>
+      <p>Construyendo oportunidades habitacionales sostenibles en distintos barrios.</p>
+    </div>
+
+    <div id="contacto" class="content">
+      <h1>Contacto</h1>
+      <p>Correo electrónico:</p>
+      <p>Telefono: </p>
+    </div>
+
+    <div id="login" class="login-box">
+  <h2>Iniciar Sesión</h2>
+  <form id="login-form" onsubmit="return handleLogin(event)">
+    <input type="text" name="identificador" placeholder="Usuario o correo" required>
+    <div class="password-wrapper">
+      <input id="login-password" name="password" type="password" placeholder="Contraseña" required />
+      <button type="button" class="toggle-password" onclick="togglePassword('login-password')">
+        <svg id="icon-login-password" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+          <circle cx="12" cy="12" r="2.5"/>
+        </svg>
+      </button>
+    </div>
+    <button class="btn" type="submit">Ingresar</button>
+  </form>
+  <a href="#" onclick="mostrar('registro')">¿No tenés cuenta? Registrate</a>
+</div>
+
+    <div id="registro" class="register-box">
+  <h2>Registrarse</h2>
+  <form id="register-form" onsubmit="return handleRegister(event)">
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="text" name="apellido" placeholder="Apellido" required>
+    <input type="email" name="email" placeholder="Correo electrónico">
+    <input type="text" name="usuario" placeholder="Usuario" required>
+    <input type="text" name="id_persona" placeholder="Documento (opcional)">
+    <div class="password-wrapper">
+  <input 
+    id="registro-password" 
+    name="password" 
+    type="password" 
+    placeholder="Contraseña" 
+    required 
+  />
+  <button 
+    type="button" 
+    class="toggle-password" 
+    onclick="togglePassword('registro-password')">
+    <svg 
+      id="icon-registro-password" 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 24 24">
+      <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+      <circle cx="12" cy="12" r="2.5"/>
+    </svg>
+  </button>
+</div>
+    <button class="btn" type="submit">Crear cuenta</button>
+  </form>
+  <a href="#" onclick="mostrar('login')">¿Ya tenés cuenta? Iniciá sesión</a>
+</div>
+  </main>
+
+  <footer>
+    &copy; 2025 MiTecho - Todos los derechos reservados.
+  </footer>
+
+</body>
+</html>
