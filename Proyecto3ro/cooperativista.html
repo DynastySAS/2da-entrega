@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Usuario</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    Panel del Usuario
+    <button class="btn acceder-btn" onclick="cerrarSesion()" style="float:right; margin-right:20px;">Cerrar Sesión</button>
+  </header>
+  <nav>
+    <button class="btn" onclick="mostrar('info-personal')">Información personal</button>
+    <button class="btn" onclick="mostrar('hs-semanales')">Actualizar Horas Trabajadas</button>
+    <button class="btn" onclick="mostrar('subir-comprobante-pago')">Subir comprobante de pago</button>
+  </nav>
+
+  <main>
+    <div id="info-personal" class="content active">
+  <h2>Información personal</h2>
+  <form id="form-info">
+          <label>Nombre:</label>
+          <input type="text" readonly name="nombre" id="nombre">
+
+          <label>Apellido:</label>
+          <input type="text" readonly name="apellido" id="apellido">
+
+          <label>Id Usuario:</label>
+          <input type="text" readonly name="id_usuario" id="id_usuario">
+
+          <label>Usuario:</label>
+          <input type="text" name="usuario_login" id="usuario_login">
+
+          <label>Número de documento:</label>
+          <input type="number" name="id_persona" id="id_persona">
+
+          <label>Teléfono:</label>
+          <input type="number" name="telefono" id="telefono">
+
+          <label>Email:</label>
+          <input type="email" name="email" id="email">
+    <button class="btn" type="submit">Actualizar información</button>
+  </form>
+</div>
+
+    <div id="hs-semanales" class="content">
+  <h2>Horas trabajadas</h2>
+  <form id="form-horas">
+    <input type="hidden" id="horas-id-usuario" name="id_usuario">
+    <label for="fecha-hs">Fecha:</label>
+    <input type="date" id="fecha-hs" name="fecha" required>
+
+    <label for="horas">Horas trabajadas:</label>
+    <input type="number" id="horas" name="horas" step="0.25" min="0" max="200" required>
+
+    <label for="motivo">Motivo</label>
+    <input type="text" id="motivo" name="motivo" placeholder="Solo llenar en caso de no llegar a las 21 horas semanales">
+
+    <button class="btn" type="submit">Guardar</button>
+  </form>
+</div>
+    
+    <div id="subir-comprobante-pago" class="content">
+  <h2>Información del pago</h2>
+  <form id="form-pago">
+    <input type="hidden" id="pago-id-usuario" name="id_usuario">
+
+    <label for="fecha-pago">Fecha:</label>
+    <input type="date" id="fecha-pago" name="fecha" required>
+
+    <label for="monto">Monto:</label>
+    <input type="number" id="monto" name="monto" step="0.01" min="0" required>
+
+    <label class="label" for="tipo-pago">Tipo de pago:</label>
+    <select id="tipo-pago" name="tipo-pago">
+      <option value="mensual">Mensual</option>
+      <option value="inicial">Inicial</option>
+      <option value="compensatorio">Compensatorio</option>
+    </select>
+
+    <button class="btn" type="submit">Guardar</button>
+  </form>
+</div>
+
+    
+    
+    <div class="content">
+      <h2>Información completa</h2>
+      <div id="datos-usuario"></div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 MiTecho - Todos los derechos reservados.
+  </footer>
+</body>
+</html>

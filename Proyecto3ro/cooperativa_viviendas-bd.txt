@@ -24,10 +24,9 @@ CREATE TABLE IF NOT EXISTS vivienda (
 
 CREATE TABLE IF NOT EXISTS pago ( 
 	id_pago INT AUTO_INCREMENT PRIMARY KEY,
- 	tipo_pago ENUM('mensuales','semanales','anuales','en cuotas') NOT NULL,
+ 	tipo_pago ENUM('mensual','inicial','compensatorio') NOT NULL,
  	monto DECIMAL(10,2) NOT NULL,
  	fecha DATE NOT NULL,
-	cantidad_cuotas INT DEFAULT 1,
 	id_usuario INT NOT NULL,
 	CONSTRAINT fk_pago_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) 
 	ON DELETE CASCADE ON UPDATE CASCADE 
@@ -39,5 +38,7 @@ CREATE TABLE IF NOT EXISTS trabajo (
 	horas_cumplidas DECIMAL(5,2), 
 	fch_registro DATE NOT NULL, 
 	id_usuario INT NOT NULL, 
+	motivo VARCHAR(255) NULL,
 	CONSTRAINT fk_trabajo_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) 
-ON DELETE CASCADE ON UPDATE CASCADE ) ENGINE=InnoDB;
+ON DELETE CASCADE ON UPDATE CASCADE 
+) ENGINE=InnoDB;

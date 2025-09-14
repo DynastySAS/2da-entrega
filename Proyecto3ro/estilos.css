@@ -38,7 +38,7 @@
       backdrop-filter: saturate(180%) blur(1px);
     }
 
-    nav button {
+    .btn {
       background: none;
       border: none;
       color: #1565c0;

@@ -2,7 +2,7 @@
 // Mostrar secciones (index.html)
 // ====================
 function mostrar(seccion) {
-  const secciones = ['inicio', 'nosotros', 'proyectos', 'contacto', 'login', 'registro'];
+  const secciones = ['inicio', 'nosotros', 'proyectos', 'contacto', 'login', 'registro','info-personal','hs-semanales','subir-comprobante-pago'];
   secciones.forEach(id => {
     const elem = document.getElementById(id);
     if (elem) elem.classList.remove('active');
@@ -85,7 +85,7 @@ async function handleLogin(e) {
       // data.user tiene: id_usuario, id_persona, usuario_login, nombre, apellido, email_cont, telefono_cont, rol
       localStorage.setItem("usuario", JSON.stringify(data.user));
       alert(`¡Bienvenido, ${data.user.nombre || data.user.usuario_login}!`);
-      window.location.href = "infopersonal.html";
+      window.location.href = "cooperativista.html";
     } else {
       alert(data.msg || "Credenciales inválidas");
     }
@@ -96,7 +96,7 @@ async function handleLogin(e) {
 }
 
 // ====================
-// Cargar panel (infopersonal.html)
+// Cargar panel (cooperativista.html)
 // ====================
 function cargarPanel() {
   const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -124,8 +124,24 @@ function cargarPanel() {
   // Rellenar el formulario para actualizar datos
   const idField = document.getElementById("id_usuario");
   const telField = document.getElementById("telefono");
+  const idpField = document.getElementById("id_persona"); 
+  const nomField = document.getElementById("nombre"); 
+  const apField = document.getElementById("apellido");
+  const usField = document.getElementById("usuario_login");
+  const ceField = document.getElementById("email");
+  if (nomField) nomField.value = usuario.nombre || "";
+  if (apField) apField.value = usuario.apellido ||"";
   if (idField) idField.value = usuario.id_usuario || "";
+  if (usField) usField.value = usuario.usuario_login
+  if (idpField) idpField.value = usuario.id_persona || "";
   if (telField) telField.value = usuario.telefono_cont || "";
+  if (ceField) ceField.value = usuario.email_cont || "";
+
+  // Rellenar hidden id_usuario en formularios de horas y pagos si existen
+  const hiddenHoras = document.getElementById("horas-id-usuario");
+  const hiddenPago = document.getElementById("pago-id-usuario");
+  if (hiddenHoras) hiddenHoras.value = usuario.id_usuario || "";
+  if (hiddenPago) hiddenPago.value = usuario.id_usuario || "";
 }
 
 function cerrarSesion() {
@@ -133,25 +149,128 @@ function cerrarSesion() {
   window.location.href = "index.html";
 }
 
-// ====================
-// Guardar datos (infopersonal.html)
-// ====================
-async function guardarDatos(e) {
-  e.preventDefault();
-  const form = e.target;
-
+async function cargarInfoPersonal() {
   try {
-    const data = await postForm("Apis/guardar_datos.php", form);
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    if (!usuario || !usuario.id_usuario) return;
+    const res = await fetch("Apis/obtener_datos.php?id_usuario=" + usuario.id_usuario);
+    const data = await res.json();
+
     if (data.ok && data.user) {
-      // Actualizamos localStorage con los datos nuevos
-      localStorage.setItem("usuario", JSON.stringify(data.user));
-      alert(data.msg || "Datos actualizados");
-      cargarPanel();
-    } else {
-      alert(data.msg || "No se pudieron actualizar los datos");
+      document.getElementById("nombre").value = data.user.nombre;
+      document.getElementById("apellido").value = data.user.apellido;
+      document.getElementById("usuario_login").value = data.user.usuario_login;
+      document.getElementById("id_persona").value = data.user.id_persona || "";
+      document.getElementById("telefono").value = data.user.telefono_cont || "";
+      document.getElementById("email").value = data.user.email_cont || "";
     }
   } catch (err) {
-    alert(err.message);
+    console.error("Error al cargar info personal:", err);
+  }
+}
+
+// Cargar al abrir la página
+cargarInfoPersonal();
+
+const formInfo = document.getElementById("form-info");
+if (formInfo) {
+  formInfo.removeEventListener("submit", handleInfoSubmit);
+  formInfo.addEventListener("submit", handleInfoSubmit);
+}
+
+const formHoras = document.getElementById("form-horas");
+if (formHoras) {
+  formHoras.removeEventListener("submit", handleHorasSubmit);
+  formHoras.addEventListener("submit", handleHorasSubmit);
+}
+
+const formPago = document.getElementById("form-pago");
+if (formPago) {
+  formPago.removeEventListener("submit", handlePagoSubmit);
+  formPago.addEventListener("submit", handlePagoSubmit);
+}
+
+async function handleInfoSubmit(e) {
+  e.preventDefault();
+
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+  const datos = {
+    id_usuario: usuario.id_usuario,
+    usuario_login: document.getElementById("usuario_login").value,
+    id_persona: document.getElementById("id_persona").value,
+    telefono: document.getElementById("telefono").value,
+    email: document.getElementById("email").value,
+  };
+
+  try {
+    const res = await fetch("Apis/guardar_datos.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+
+    const respuesta = await res.json();
+
+    if (respuesta.ok) {
+      alert("Información actualizada correctamente");
+    } else {
+      alert("Error: " + (respuesta.message || "No se pudo guardar"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("⚠️ Informacion en uso");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("datos-usuario")) {
+    cargarPanel();
+  }
+  });
+
+async function handleHorasSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  // Asegurarse de rellenar id_usuario desde localStorage
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+  if (!usuario || !usuario.id_usuario) {
+    alert("Usuario no autenticado.");
+    window.location.href = "index.html";
+    return false;
+  }
+  // poner id en el form (campo hidden)
+  const hidden = form.querySelector('input[name="id_usuario"]');
+  if (hidden) hidden.value = usuario.id_usuario;
+
+  try {
+    const data = await postForm("Apis/registrar_horas.php", form);
+    alert(data.msg || "Horas registradas");
+    form.reset();
+  } catch (err) {
+    alert(err.message || "Error al registrar horas");
+  }
+  return false;
+}
+
+async function handlePagoSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+  if (!usuario || !usuario.id_usuario) {
+    alert("Usuario no autenticado.");
+    window.location.href = "index.html";
+    return false;
+  }
+  const hidden = form.querySelector('input[name="id_usuario"]');
+  if (hidden) hidden.value = usuario.id_usuario;
+
+  try {
+    const data = await postForm("Apis/subir_pago.php", form);
+    alert(data.msg || "Pago registrado");
+    form.reset();
+  } catch (err) {
+    alert(err.message || "Error al registrar pago");
   }
   return false;
 }
@@ -165,11 +284,5 @@ document.addEventListener("DOMContentLoaded", () => {
     mostrar("inicio");
     document.getElementById("login-form")?.addEventListener("submit", handleLogin);
     document.getElementById("register-form")?.addEventListener("submit", handleRegister);
-  }
-
-  // Si estamos en infopersonal.html
-  if (document.getElementById("datos-usuario")) {
-    cargarPanel();
-    document.getElementById("datos-form")?.addEventListener("submit", guardarDatos);
   }
 });
