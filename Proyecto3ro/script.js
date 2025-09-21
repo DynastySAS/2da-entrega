@@ -85,7 +85,17 @@ async function handleLogin(e) {
       // data.user tiene: id_usuario, id_persona, usuario_login, nombre, apellido, email_cont, telefono_cont, rol
       localStorage.setItem("usuario", JSON.stringify(data.user));
       alert(`¡Bienvenido, ${data.user.nombre || data.user.usuario_login}!`);
-      window.location.href = "cooperativista.html";
+      switch(data.user.rol){
+        case "administrador":
+          window.location.href = "backoffice.html";
+          break;
+        case "cooperativista":
+          window.location.href = "cooperativista.html";
+          break;
+        default:
+          window.location.href = "index.html";
+          break;  
+      }
     } else {
       alert(data.msg || "Credenciales inválidas");
     }
@@ -150,6 +160,7 @@ function cerrarSesion() {
 }
 
 async function cargarInfoPersonal() {
+  if (!document.getElementById("nombre")) return;
   try {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
     if (!usuario || !usuario.id_usuario) return;
@@ -286,3 +297,79 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("register-form")?.addEventListener("submit", handleRegister);
   }
 });
+
+// ====================
+// Cargar solicitudes de pago
+// ====================
+async function cargarPagos() {
+  const contenedor = document.getElementById("lista-pagos");
+  contenedor.innerHTML = "<p>Cargando solicitudes de pago...</p>";
+
+  try {
+    const res = await fetch("Apis/obtener_solicitud_pago.php");
+    const data = await res.json();
+
+    if (!data.ok) {
+      contenedor.innerHTML = "<p>No se pudieron obtener los pagos.</p>";
+      return;
+    }
+
+    if (data.pagos.length === 0) {
+      contenedor.innerHTML = "<p>No hay solicitudes de pago pendientes.</p>";
+      return;
+    }
+
+    contenedor.innerHTML = ""; // limpiar
+
+    data.pagos.forEach(pago => {
+      const card = document.createElement("div");
+      card.className = "card-pago";
+
+      card.innerHTML = `
+        <h3>Solicitud #${pago.id_pago}</h3>
+        <p><strong>ID usuario:</strong> ${pago.id_usuario}</p>
+        <p><strong>Tipo de pago:</strong> ${pago.tipo_pago}</p>
+        <p><strong>Monto:</strong> $${pago.monto}</p>
+        <p><strong>Fecha:</strong> ${pago.fecha}</p>
+        <p><strong>Estado:</strong> ${pago.estado}</p>
+        <button class="btn" onclick="aprobarPago(${pago.id_pago})">Aprobar</button>
+      `;
+
+      contenedor.appendChild(card);
+    });
+  } catch (err) {
+    contenedor.innerHTML = "<p>Error al cargar los pagos.</p>";
+    console.error(err);
+  }
+}
+
+// ====================
+// Aprobar un pago
+// ====================
+async function aprobarPago(id_pago) {
+  if (!confirm("¿Seguro que deseas aprobar este pago?")) return;
+
+  try {
+    const res = await fetch("Apis/aprobar_pago.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_pago })
+    });
+
+    const data = await res.json();
+    if (data.ok) {
+      alert("Pago aprobado correctamente");
+      cargarPagos(); 
+    } else {
+      alert("Error: " + (data.msg || "No se pudo aprobar el pago"));
+    }
+  } catch (err) {
+    alert("Error de conexión al servidor" );
+    console.error(err);
+  }
+}
+
+// ====================
+// Inicializar
+// ====================
+document.addEventListener("DOMContentLoaded", cargarPagos);

@@ -23,8 +23,8 @@ if (!$stmt) {
 }
 $stmt->bind_param("i", $id_usuario);
 $stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+$res = $stmt->get_result();
+$user = $res->fetch_assoc();
 $stmt->close();
 
 if ($user) {

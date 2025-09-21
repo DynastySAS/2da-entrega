@@ -205,3 +205,51 @@
       border-radius: 10px;
       border: 1px solid #90caf9;
     }
+
+    /* ======== Tarjetas de pagos en Backoffice ======== */
+.grid-pagos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.card-pago {
+  background: rgba(235, 245, 255, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: left;
+  transition: transform 0.2s ease;
+}
+
+.card-pago:hover {
+  transform: translateY(-5px);
+}
+
+.card-pago h3 {
+  color: #1565c0;
+  margin-bottom: 10px;
+}
+
+.card-pago p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.btn-approve {
+  background: rgba(76, 175, 80, 0.85);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.btn-approve:hover {
+  background: rgba(56, 142, 60, 1);
+}
