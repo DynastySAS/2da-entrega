@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago inicial</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script src="Js/script.js" defer></script>
+</head>
+<body>
+    <header>
+    Panel del Usuario
+    <button class="btn acceder-btn" onclick="cerrarSesion()" style="float:right; margin-right:20px;">Cerrar Sesión</button>
+  </header>
+  <nav>
+    <button class="btn" onclick="mostrar('info-personal')">Completar información personal</button>
+    <button class="btn" onclick="mostrar('subir-pago-inicial')">Subir pago inicial</button>
+  </nav>
+
+  <main>
+    <div id="info-personal" class="content active">
+  <h2>Completar información personal</h2>
+  <form id="form-info">
+          <label>Nombre:</label>
+          <input required type="text" readonly name="nombre" id="nombre">
+
+          <label>Apellido:</label>
+          <input required type="text" readonly name="apellido" id="apellido">
+
+          <label>Id Usuario:</label>
+          <input required type="text" readonly name="id_usuario" id="id_usuario">
+
+          <label>Usuario:</label>
+          <input required type="text" name="usuario_login" id="usuario_login">
+
+          <label>Número de documento:</label>
+          <input required type="number" readonly name="id_persona" id="id_persona">
+
+          <label>Teléfono:</label>
+          <input required type="number" name="telefono" id="telefono">
+
+          <label>Email:</label>
+          <input required type="email" name="email" id="email">
+    <button class="btn" type="submit">Actualizar información</button>
+  </form>
+</div>
+    
+<div id="subir-pago-inicial" class="content">
+  <h2>Subir pago inicial</h2>
+  <form id="form-pago">
+    <input type="hidden" id="id_usuario" name="id_usuario">
+    <label for="monto">Monto:</label>
+    <input type="number" id="monto" name="monto" step="0.01" min="0" required>
+
+    <label class="label" for="tipo-pago">Tipo de pago:</label>
+    <select id="tipo-pago" name="tipo-pago">
+      <option value="inicial">Inicial</option>
+    </select>
+
+    <button class="btn" type="submit">Guardar</button>
+  </form>
+</div>
+
+</main>
+
+<footer>
+    &copy; 2025 MiTecho - Todos los derechos reservados.
+  </footer>
+</body>
+</html>
